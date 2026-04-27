@@ -5,7 +5,8 @@
 #include "createdb.h"
 #include "createtable.h"
 
-void createDb() {
+void createDb()
+{
     char dbName[50];
     char line[50];
     char nameWithExt[50];
@@ -13,15 +14,18 @@ void createDb() {
     FILE *f;
     int i, found, flag;
 
-    do {
+    do
+    {
         printf("Enter database name: ");
         scanf("%s", dbName);
 
         // Validate to ensure name does not contain extension
         flag = 1;
         i = 0;
-        while (dbName[i] != '\0') {
-            if (dbName[i] == '.') {
+        while (dbName[i] != '\0')
+        {
+            if (dbName[i] == '.')
+            {
                 printf("Error: No extensions allowed.\n");
                 flag = 0;
                 break;
@@ -29,18 +33,20 @@ void createDb() {
             i++;
         }
 
-        if (flag == 0) continue; //Ask for new database name
-        
-        //nameWithExt = dbName + ".txt"
-        strcpy(nameWithExt, dbName);
-        strcat(nameWithExt, ".txt");
+        if (flag == 0)
+        {
+            continue; // Ask for new database name
+        }
 
         // Check if already exists
         found = 0;
         f = fopen("names.txt", "r");
-        if (f != NULL) {
-            while (fscanf(f, "%s", line) != EOF) {
-                if (strcmp(line, nameWithExt) == 0) {
+        if (f != NULL)
+        {
+            while (fscanf(f, "%s", line) != EOF)
+            {
+                if (strcmp(line, dbName) == 0)
+                {
                     found = 1;
                     break;
                 }
@@ -48,7 +54,8 @@ void createDb() {
             fclose(f);
         }
 
-        if (found) {
+        if (found)
+        {
             printf("Database already exists. Try another name.\n");
         }
 
@@ -56,23 +63,25 @@ void createDb() {
 
     // Add database name to names.txt
     f = fopen("names.txt", "a");
-    fprintf(f, "%s\n", nameWithExt);
+    fprintf(f, "%s\n", dbName);
     fclose(f);
 
     // Create folder
     _mkdir(dbName);
 
     // Create tableNames.txt inside folder
-    path[0] = '\0';       //Set first character to null to avoid garbage value
+    path[0] = '\0'; // Set first character to null to avoid garbage value
     strcat(path, dbName);
-    strcat(path, "/tableNames.txt");  //Create tableNames.txt inside folder  
+    strcat(path, "/tableNames.txt"); // Create tableNames.txt inside folder
     f = fopen(path, "w");
-    if(f==NULL) {
+    if (f == NULL)
+    {
         printf("Error creating CSV file.\n");
         exit(1);
     }
     fclose(f);
 
-    printf("Database '%s' created successfully.\n", dbName);
+    printf("\n................................................................\n");
+    printf("\n**    DATABASE '%s' CREATED SUCCESSFULLY    **\n\n", dbName);
     createTable(dbName);
 }

@@ -1,6 +1,6 @@
 #ifndef CREATE_H
 #define CREATE_H
 
-void call();
+void callCreate();
 
 #endif

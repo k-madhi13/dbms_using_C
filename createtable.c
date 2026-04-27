@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "createtable.h"
 
-void createTable(char dbName[50]) {
+#include "createtable.h"
+#include "menu.h"
+
+void createTable(char dbName[50])
+{
     char tableName[50];
     char nameWithExt[50];
     char line[50];
@@ -14,42 +17,49 @@ void createTable(char dbName[50]) {
     char colNames[20][50];
 
     // If there is no dbname, ask for it
-    if (dbName[0] == '\0') {do {
-        printf("Enter database name: ");
-        scanf("%s", dbName);
+    if (dbName[0] == '\0')
+    {
+        do
+        {
+            printf("Enter database name: ");
+            scanf("%s", dbName);
 
-        // Check if database exists in names.txt
-        found = 0;
-        f = fopen("names.txt", "r");
-        if (f != NULL) {
-            char nameWithDb[50];
-            strcpy(nameWithDb, dbName);
-            strcat(nameWithDb, ".txt");
-            while (fscanf(f, "%s", line) != EOF) {
-                if (strcmp(line, nameWithDb) == 0) {
-                    found = 1;
-                    break;
+            // Check if database exists in names.txt
+            found = 0;
+            f = fopen("names.txt", "r");
+            if (f != NULL)
+            {
+                while (fscanf(f, "%s", line) != EOF)
+                {
+                    if (strcmp(line, dbName) == 0)
+                    {
+                        found = 1;
+                        break;
+                    }
                 }
+                fclose(f);
             }
-            fclose(f);
-        }
 
-        if (found == 0) {
-            printf("Database does not exist. Try again.\n");
-        }
+            if (found == 0)
+            {
+                printf("Database does not exist. Try again.\n");
+            }
 
-    } while (found == 0);
-}
-    // Ask for table name 
-    do {
+        } while (found == 0);
+    }
+    // Ask for table name
+    do
+    {
         printf("Enter table name: ");
         scanf("%s", tableName);
 
         // Validate to ensure name does not contain extension
         flag = 1;
         i = 0;
-        while (tableName[i] != '\0') {
-            if (tableName[i] == '.') {
+        while (tableName[i] != '\0')
+        {
+            if (tableName[i] == '.')
+            {
                 printf("Error: No extensions allowed.\n");
                 flag = 0;
                 break;
@@ -57,7 +67,8 @@ void createTable(char dbName[50]) {
             i++;
         }
 
-        if (flag == 0) continue;  //If extension found, ask for name again
+        if (flag == 0)
+            continue; // If extension found, ask for name again
 
         // nameWithExt = tableName + ".txt"
         strcpy(nameWithExt, tableName);
@@ -69,9 +80,12 @@ void createTable(char dbName[50]) {
         strcat(path, dbName);
         strcat(path, "/tableNames.txt");
         f = fopen(path, "r");
-        if (f != NULL) {
-            while (fscanf(f, "%s", line) != EOF) {
-                if (strcmp(line, nameWithExt) == 0) {
+        if (f != NULL)
+        {
+            while (fscanf(f, "%s", line) != EOF)
+            {
+                if (strcmp(line, nameWithExt) == 0)
+                {
                     foundtb = 1;
                     break;
                 }
@@ -79,7 +93,8 @@ void createTable(char dbName[50]) {
             fclose(f);
         }
 
-        if (foundtb) {
+        if (foundtb)
+        {
             printf("Table already exists. Try another name.\n");
         }
 
@@ -98,21 +113,25 @@ void createTable(char dbName[50]) {
     scanf("%d", &cols);
 
     // Ask for column names
-    for (i = 0; i < cols; i++) {
+    for (i = 0; i < cols; i++)
+    {
         int j, duplicate;
-        do{
-        printf("Column %d name: ", i + 1);
-        scanf("%s", colNames[i]);
-        duplicate = 0;
-        // Check for duplicate column names
-        for(j = 0; j < i; j++) {
-            if(strcmp(colNames[i], colNames[j]) == 0) {
-                printf("Column name already used. Try again.\n");
-                duplicate = 1;
-                break;
+        do
+        {
+            printf("Column %d name: ", i + 1);
+            scanf("%s", colNames[i]);
+            duplicate = 0;
+            // Check for duplicate column names
+            for (j = 0; j < i; j++)
+            {
+                if (strcmp(colNames[i], colNames[j]) == 0)
+                {
+                    printf("Column name already used. Try again.\n");
+                    duplicate = 1;
+                    break;
+                }
             }
-        }
-        } while(duplicate);
+        } while (duplicate);
     }
 
     // Ask for primary key
@@ -126,7 +145,8 @@ void createTable(char dbName[50]) {
     strcat(path, tableName);
     strcat(path, "MD.csv");
     f = fopen(path, "w");
-    if(f==NULL) {
+    if (f == NULL)
+    {
         printf("Error creating CSV file.\n");
         exit(1);
     }
@@ -140,13 +160,15 @@ void createTable(char dbName[50]) {
     strcat(path, tableName);
     strcat(path, ".csv");
     f = fopen(path, "w");
-    if(f==NULL) {
+    if (f == NULL)
+    {
         printf("Error creating CSV file.\n");
         exit(1);
     }
 
     // Write column names to first line of CSV
-    for (i = 0; i < cols; i++) {
+    for (i = 0; i < cols; i++)
+    {
         if (i < cols - 1)
             fprintf(f, "%s,", colNames[i]);
         else
@@ -154,5 +176,7 @@ void createTable(char dbName[50]) {
     }
     fclose(f);
 
-    printf("Table '%s' created successfully.\n", tableName);
+    printf("\n................................................................\n");
+    printf("\n**    TABLE '%s' CREATED SUCCESSFULLY    **", tableName);
+    showMenu();
 }
