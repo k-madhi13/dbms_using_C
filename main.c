@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "database.h"
+#include "delete.h"
 int main() {
     int choice;
     char db_name[100];
